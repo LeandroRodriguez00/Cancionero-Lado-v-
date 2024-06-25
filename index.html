@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancionero Karaoke</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery -->
+     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #ff007f, #e60073);
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding-top: 20px;
+            text-align: center;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .page-title {
+            color: #fff;
+            font-weight: 600;
+            font-size: 2.5em;
+        }
+        .song-list-container {
+            display: none;
+        }
+        .list-group-item {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-color: #ddd;
+            color: #333;
+            font-weight: 400;
+        }
+        .btn-primary {
+            background-color: #ff007f;
+            border-color: #ff007f;
+            color: #fff;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .btn-primary:hover {
+            background-color: #e60073;
+            border-color: #e60073;
+            color: #fff;
+        }
+        .artist-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        footer {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        /* Pantalla de carga */
+        #loading-screen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-size: 2em;
+            text-align: center;
+            font-weight: 600;
+            animation: fadeIn 1s ease-in-out;
+        }
+        #loading-screen img {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+        #loading-screen .microphone-icon {
+            width: 50px;
+            height: 50px;
+            margin-top: 20px;
+            animation: bounce 1s infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+        }
+        /* Ajustes para la legibilidad del nombre del artista */
+        .song-list-container h3 {
+            color: #ff007f;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .highlight {
+            background-color: #ff007f !important;
+            color: #fff !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de carga -->
+    <div id="loading-screen">
+        <img src="./201215_LADO V - Logo Final_OUT_Mesa de trabajo 1 copia.png" alt="Logo LADO V">
+        <div>Bienvenidos a la noche de karaoke de LADO V!!</div>
+        <div>Cargando cancionero...</div>
+        <div class="microphone-icon">
+            <!-- SVG Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                <path d="M12 14a4 4 0 0 0 4-4V5a4 4 0 0 0-8 0v5a4 4 0 0 0 4 4zm5-4a5.002 5.002 0 0 1-4 4.9V18h3v2h-8v-2h3v-3.1A5.002 5.002 0 0 1 7 10V5a5 5 0 0 1 10 0v5z"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Logo -->
+        <img src="./201215_LADO V - Logo Final_OUT_Mesa de trabajo 1 copia.png" alt="Logo Cancionero Karaoke" class="logo img-fluid">
+
+        <!-- Título -->
+        <h1 class="page-title">Cancionero Karaoke</h1>
+
+        <!-- Lista de artistas -->
+        <div id="artist-list" class="list-group mt-4 artist-container"></div>
+
+        <!-- Lista de canciones -->
+        <div id="song-list" class="song-list-container mt-4 artist-container">
+            <h3 id="selected-artist"></h3>
+            <ul id="songs" class="list-group"></ul>
+            <button id="back-button" class="btn btn-primary mt-3">Volver a artistas</button>
+        </div>
+    </div>
+
+    <!-- Pie de página -->
+    <footer>
+        <p><strong>LADO V</strong></p>
+        <p>Dirección: Honduras 4969, Palermo, Buenos Aires</p>
+        <p>Whatsapp: 1131671919</p>
+        <p>Instagram: Ladov.BsAs</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Tu script personalizado -->
+    <script defer src="script.js"></script>
+
+    <!-- Script para pantalla de carga -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('loading-screen').style.display = 'none';
+            }, 3500); // Cambia este valor para ajustar el tiempo de la pantalla de carga
+        });
+    </script>
+</body>
+</html>
