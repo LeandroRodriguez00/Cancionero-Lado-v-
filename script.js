@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 icon: 'question',
                                 confirmButtonText: 'Aceptar'
                             });
-                        }, 40000); // Mostrar SweetAlert 40 segundos después del primero
+                        }, 20000); // Mostrar SweetAlert 40 segundos después del primero
                     });
                 }
             });
